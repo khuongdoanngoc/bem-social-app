@@ -1,13 +1,7 @@
-import { Button } from '@/components/ui/button'
+import { SignInForm } from '@/components/forms'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Chromium, Eye, EyeOff } from 'lucide-react'
-import { useState } from 'react'
 
 export default function SignInPage() {
-    const [showPassword, setShowPassword] = useState(false)
-
     return (
         <div
             className="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center bg-no-repeat"
@@ -33,60 +27,7 @@ export default function SignInPage() {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="username" className="text-gray-300">
-                                    Guest
-                                </Label>
-                                <Input
-                                    id="username"
-                                    type="text"
-                                    className="bg-gray-800/80 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-primary focus:ring-primary backdrop-blur-sm"
-                                    placeholder="Guest"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <div className="relative">
-                                    <Input
-                                        type={showPassword ? 'text' : 'password'}
-                                        className="bg-gray-800/80 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-primary focus:ring-primary backdrop-blur-sm pr-10"
-                                        placeholder="••••••"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
-                                    >
-                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <Button
-                                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2.5"
-                                size="lg"
-                            >
-                                Login
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                className="w-full border-gray-600/50 bg-gray-800/60 text-white hover:bg-gray-700/70 font-medium py-2.5 backdrop-blur-sm"
-                                size="lg"
-                            >
-                                <Chromium className="w-5 h-5 mr-2" />
-                                Sign in with Google
-                            </Button>
-                        </div>
-
-                        <div className="text-center">
-                            <span className="text-gray-400 text-sm">Don't have an account? </span>
-                            <a href="/sign-up" className="text-primary hover:text-primary/80 text-sm font-medium">
-                                Sign up, it's free!
-                            </a>
-                        </div>
+                        <SignInForm />
                     </CardContent>
                 </Card>
             </div>
