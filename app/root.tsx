@@ -12,7 +12,12 @@ export const links: Route.LinksFunction = () => [
     },
     {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
+        href: '/app/assets/fonts/Typo_Round_Regular.otf',
+        type: 'font/otf',
+    },
+    {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Courgette&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap',
     },
 ]
 
