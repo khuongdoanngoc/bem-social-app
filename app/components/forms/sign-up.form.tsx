@@ -28,8 +28,16 @@ export const SignUpForm = () => {
         signUpMutation.mutate(data)
     }
 
+    const error = signUpMutation.error
+
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Show error if there is */}
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-3 py-2 rounded-md">
+                    {(error.response?.data as { message: string })?.message || 'An error occurred'}
+                </div>
+            )}
             <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">

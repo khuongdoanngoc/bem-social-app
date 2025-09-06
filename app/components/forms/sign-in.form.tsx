@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 export const SignInForm = () => {
     const signInMutation = useSignInMutation()
+    const error = signInMutation.error
     const [showPassword, setShowPassword] = useState(false)
 
     const form = useForm<SignInFormData>({
@@ -27,6 +28,12 @@ export const SignInForm = () => {
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Show error if there is */}
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-3 py-2 rounded-md">
+                    {(error as { message: string })?.message || 'An error occurred'}
+                </div>
+            )}
             <div className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="email" className="text-gray-300">
