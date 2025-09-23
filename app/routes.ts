@@ -10,7 +10,7 @@ export default [
             route('notifications', 'routes/notifications.tsx'),
             route('messages', 'routes/messages.tsx'),
             route('bookmarks', 'routes/bookmarks.tsx'),
-            route('profile', 'routes/profile.tsx'),
+            route(':id', 'routes/profile.tsx'),
             route('settings', 'routes/settings.tsx'),
         ]),
     ]),

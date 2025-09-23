@@ -7,7 +7,7 @@ import { Button } from '../ui/button'
 import { Eye, EyeOff, Chromium } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { useState } from 'react'
-import { useSignUpMutation } from '@/hooks/queries/auth'
+import { useSignUpMutation } from '@/hooks/auth'
 
 export const SignUpForm = () => {
     const signUpMutation = useSignUpMutation()

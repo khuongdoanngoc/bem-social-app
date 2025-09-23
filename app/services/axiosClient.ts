@@ -1,4 +1,6 @@
 // app/services/axiosClient.ts
+import type { ZustandStore } from '@/types/common/zustand.store'
+import type { AuthState } from '@/types/auth/auth.store.type'
 import axios from 'axios'
 
 // Utility to get cookie
@@ -20,10 +22,10 @@ export const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     config => {
         // Get access token from localStorage
-        const authStore = JSON.parse(localStorage.getItem('auth-store') || '{}')
+        const authStore: ZustandStore<AuthState> = JSON.parse(localStorage.getItem('auth-store') || '{}')
 
-        if (authStore.token) {
-            config.headers.Authorization = `Bearer ${authStore.token}`
+        if (authStore.state.token) {
+            config.headers.Authorization = `Bearer ${authStore.state.token}`
         }
 
         return config
