@@ -10,6 +10,12 @@ export const authApi = {
     signIn: async (data: SignInFormData): Promise<ApiResponse<SignInResponse>> => {
         return await axiosClient.post('/auth/sign-in', data)
     },
+    refreshToken: async (): Promise<ApiResponse<SignInResponse>> => {
+        return await axiosClient.post('/auth/refresh-token', {}, { withCredentials: true })
+    },
+    getMe: async (): Promise<ApiResponse<User>> => {
+        return await axiosClient.get('/auth/me')
+    },
     logout: async (): Promise<ApiResponse<void>> => {
         return await axiosClient.post('/auth/logout')
     },

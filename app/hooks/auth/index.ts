@@ -1,1 +1,1 @@
-export { useSignUpMutation, useSignInMutation } from './useAuth' 
+export { useSignUpMutation, useSignInMutation } from './useAuth'

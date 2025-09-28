@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import type { AuthState } from '@/types/auth/auth.store.type'
-
+import type { User } from '@/types/auth/auth.types'
 
 export const useAuthStore = create<AuthState>()(
     devtools(
@@ -16,6 +16,10 @@ export const useAuthStore = create<AuthState>()(
 
                 signIn: (user, token) => set({ user, token, isAuthenticated: true }),
                 signOut: () => set({ user: null, token: null, isAuthenticated: false }),
+                // Thêm method updateUser để cập nhật thông tin user
+                updateUser: (updatedUser) => set(state => ({ 
+                    user: state.user ? { ...state.user, ...updatedUser } : null 
+                })),
             }),
             {
                 name: 'auth-store',

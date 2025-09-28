@@ -13,3 +13,4 @@ export type Profile = {
     createdAt: string
     updatedAt: string
 }
+

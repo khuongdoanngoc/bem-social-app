@@ -6,6 +6,7 @@ export interface AuthState {
     token: string | null
     signIn: (user: User, token: string) => void
     signOut: () => void
+    updateUser: (updatedUser: Partial<User>) => void // Thêm method này
     _hasHydrated: boolean
     setHasHydrated: (state: boolean) => void
 }

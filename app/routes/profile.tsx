@@ -1,11 +1,14 @@
-import { Calendar, MapPin, Link2, Camera, Settings } from 'lucide-react'
+import { Calendar, MapPin, Link2, Camera, Settings, Cake, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { LoadingOverlay } from '@/components/layout'
+import { UpdateProfileForm } from '@/components/forms'
 import type { Route } from './+types/profile'
+import type { UpdateProfileFormData, Profile } from '@/types/profile'
 import { useParams } from 'react-router'
-import { useProfileQuery } from '@/hooks/profile'
+import { useProfileQuery, useUpdateProfileMutation } from '@/hooks/profile'
 import { formatDate } from '@/utils/formatDate'
+import { getAvatarDisplay, getCoverDisplay } from '@/utils/avatarUtils'
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: 'Profile' }, { name: 'description', content: 'Profile page' }]
@@ -14,6 +17,16 @@ export function meta({}: Route.MetaArgs) {
 export default function ProfilePage() {
     const { id } = useParams<{ id: string | undefined }>()
     const { data: profile, isLoading, error } = useProfileQuery(id || '')
+    const updateProfileMutation = useUpdateProfileMutation(id || '')
+
+    const handleProfileUpdate = async (data: UpdateProfileFormData | FormData) => {
+        try {
+            await updateProfileMutation.mutateAsync(data as any)
+        } catch (error) {
+            console.error('Failed to update profile:', error)
+            throw error
+        }
+    }
     const userPosts = [
         {
             id: 1,
@@ -54,23 +67,44 @@ export default function ProfilePage() {
                 <CardContent className="p-6">
                     {/* Cover & Avatar */}
                     <div className="relative mb-16">
-                        <div className="h-32 bg-gradient-to-r from-primary/20 to-primary/40 rounded-lg"></div>
+                        {(() => {
+                            const cover = getCoverDisplay(profile?.cover)
+                            return cover.type === 'image' ? (
+                                <img src={cover.value} alt="Profile cover" className="w-full h-32 object-cover" />
+                            ) : null
+                        })()}
                         <div className="absolute -bottom-12 left-6">
-                            <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border-4 border-gray-800 shadow-lg">
-                                <span className="text-primary font-bold text-2xl">
-                                    {profile?.firstName?.charAt(0).toUpperCase() ||
-                                        profile?.email.charAt(0).toUpperCase()}
-                                </span>
+                            <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border-4 border-gray-800 shadow-lg overflow-hidden">
+                                {(() => {
+                                    const avatar = getAvatarDisplay(profile?.avatar, profile?.firstName, profile?.email)
+                                    return avatar.type === 'image' ? (
+                                        <img
+                                            src={avatar.value}
+                                            alt="Profile avatar"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-primary font-bold text-2xl">{avatar.value}</span>
+                                    )
+                                })()}
                             </div>
                         </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="absolute -bottom-12 right-6 bg-gray-800/80 border-gray-600/50 text-white hover:bg-gray-700/80"
-                        >
-                            <Camera className="w-4 h-4 mr-2" />
-                            Edit Profile
-                        </Button>
+                        {profile && (
+                            <UpdateProfileForm
+                                profile={profile}
+                                onUpdate={handleProfileUpdate}
+                                trigger={
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="absolute -bottom-12 right-6 bg-gray-800/80 border-gray-600/50 text-white hover:bg-gray-700/80"
+                                    >
+                                        <Camera className="w-4 h-4 mr-2" />
+                                        Edit Profile
+                                    </Button>
+                                }
+                            />
+                        )}
                     </div>
 
                     {/* User Info */}
@@ -82,9 +116,7 @@ export default function ProfilePage() {
                             <p className="text-gray-400">@{profile?.email.split('@')[0]}</p>
                         </div>
 
-                        <p className="text-white">
-                            {profile?.description}
-                        </p>
+                        <p className="text-white">{profile?.description}</p>
 
                         <div className="flex flex-wrap gap-4 text-gray-400 text-sm">
                             <div className="flex items-center space-x-1">
@@ -95,7 +127,18 @@ export default function ProfilePage() {
                                 <Link2 className="w-4 h-4" />
                                 <span className="text-primary">https://linktr.ee/tranmauritam</span>
                             </div>
-                            <br />
+                            {profile?.phone && (
+                                <div className="flex items-center space-x-1">
+                                    <Phone className="w-4 h-4" />
+                                    <span>{profile.phone}</span>
+                                </div>
+                            )}
+                            {profile?.birthDate && (
+                                <div className="flex items-center space-x-1">
+                                    <Cake className="w-4 h-4" />
+                                    <span>Born {formatDate(profile.birthDate)}</span>
+                                </div>
+                            )}
                             <div className="flex items-center space-x-1">
                                 <Calendar className="w-4 h-4" />
                                 <span>Joined {profile?.createdAt ? formatDate(profile.createdAt) : ''}</span>
@@ -125,11 +168,23 @@ export default function ProfilePage() {
                     {userPosts.map(post => (
                         <div key={post.id} className="border-b border-gray-700/50 pb-4 last:border-b-0 last:pb-0">
                             <div className="flex items-start space-x-3">
-                                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30">
-                                    <span className="text-primary font-bold text-sm">
-                                        {profile?.firstName?.charAt(0).toUpperCase() ||
-                                            profile?.email.charAt(0).toUpperCase()}
-                                    </span>
+                                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 overflow-hidden">
+                                    {(() => {
+                                        const avatar = getAvatarDisplay(
+                                            profile?.avatar,
+                                            profile?.firstName,
+                                            profile?.email,
+                                        )
+                                        return avatar.type === 'image' ? (
+                                            <img
+                                                src={avatar.value}
+                                                alt="Profile avatar"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <span className="text-primary font-bold text-sm">{avatar.value}</span>
+                                        )
+                                    })()}
                                 </div>
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center space-x-2">

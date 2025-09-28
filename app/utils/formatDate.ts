@@ -5,3 +5,13 @@ export const formatDate = (date: string) => {
         day: 'numeric',
     })
 }
+
+export const formatDateForInput = (isoDate: string): string => {
+    if (!isoDate) return ''
+    try {
+        const date = new Date(isoDate)
+        return date.toISOString().split('T')[0]
+    } catch {
+        return ''
+    }
+}
